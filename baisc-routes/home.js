@@ -11,7 +11,7 @@ module.exports = (req, res) => {
 
         res.writeHead(200, { "Content-Type": "text/html" });
         console.log(__dirname,900);
-        res.end(fs.readFileSync(path.join(__dirname,'../public/index.html'),'utf8'));
+        res.end(fs.readFileSync(path.join(__dirname,'../basic-public/index.html'),'utf8'));
 
     } else if (req.method == 'POST') {
         let body = '';
