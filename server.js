@@ -25,9 +25,11 @@ app.set('views', `${__dirname}/views`);
 //----------routes creating-------------------------------
 // home page route--------------------------
 app.get("/", async (req, res) => {
-    let data = await req.dbConnection.db('test').collection('posts').find({}).toArray();
-    console.log(data)
-    res.render("index");
+    let posts = await req.dbConnection.db('node-blog').collection('posts').find({}).toArray();
+    console.log(posts)
+    res.render("index", {
+        posts
+    });
 })
 
 // About page---********************.-----------
@@ -49,19 +51,26 @@ app.get("/post/create", (req, res) => {
 app.get("/contact", (req, res) => {
     res.render('contact')
 })
-
 //contact help form route
-app.post('/help', (req, res) => {
+app.post('/help', async (req, res) => {
     console.log("help request recevied");
     console.log("help request recevied with", req.body);
+    let insertedRecord = await req.dbConnection.db('node-blog').collection("contact").insertOne(req.body);
+    res.redirect('/')
+});
+
+
+app.post('/insertContent', async (req, res) => {
+    console.log(req.body,8999);
+    let { username: userName, title, description, content, createdAt = new Date() } = req.body;
+    let insertedRecord = await req.dbConnection.db('node-blog').collection("posts").insertOne({ userName, title, description, content, createdAt });
+    console.log(insertedRecord)
+    if (insertedRecord.acknowledged && insertedRecord.insertedId) {
+        // return res.redirect('/')
+       return res.send("success")
+    }
+    res.send("unable to update")
 })
-
-app.post('/', (req, res) => {
-    res.send("post request handlere")
-})
-
-
-
 
 
 // server start listening
