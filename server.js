@@ -8,7 +8,7 @@ const path = require('path');
 let app = module.exports = express(); // server instance 
 
 //custom modules 
-const mongoConnection = require('./database/mongoConnection')
+const { mongoConnection, closeConnection } = require('./database/mongoConnection')
 // console.log(db())
 
 //middlewares 
@@ -61,13 +61,13 @@ app.post('/help', async (req, res) => {
 
 
 app.post('/insertContent', async (req, res) => {
-    console.log(req.body,8999);
+    console.log(req.body, 8999);
     let { username: userName, title, description, content, createdAt = new Date() } = req.body;
     let insertedRecord = await req.dbConnection.db('node-blog').collection("posts").insertOne({ userName, title, description, content, createdAt });
     console.log(insertedRecord)
     if (insertedRecord.acknowledged && insertedRecord.insertedId) {
         // return res.redirect('/')
-       return res.send("success")
+        return res.send("success")
     }
     res.send("unable to update")
 })
@@ -75,3 +75,19 @@ app.post('/insertContent', async (req, res) => {
 
 // server start listening
 app.listen(3500, () => console.log("server started and listend at 3500"));
+
+
+process.on('SIGINT', () => {
+    console.log(" closeing node port");
+    process.exit(0); 
+});
+process.on('beforeExit', (code) => {
+    console.log('Process beforeExit event with code: ', code);
+});
+
+process.on('exit', (code) => {
+    closeConnection()
+    console.log('Process exit event with code: ', code);
+
+});
+process.on('uncaughtException', (err) => console.log(err));

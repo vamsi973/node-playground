@@ -1,4 +1,4 @@
-@layout('layout.app')
+@layout('layout/app')
 
 @section('content')
 
@@ -32,11 +32,15 @@
                         </p>
                     </div>
                     @endeach
-                    
+
                     <!-- Divider-->
                     <hr class="my-4" />
                     <!-- Pager-->
+                    @if(posts > 0)
                     <div class="d-flex justify-content-end mb-4"><a class="btn btn-primary text-uppercase" href="#!">Older Posts →</a></div>
+                    @else
+                    <div class='d-flex text-uppercase justify-content-center'> No Posts available</div>
+                    @endif
                 </div>
             </div>
         </div>
