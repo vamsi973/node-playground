@@ -14,13 +14,13 @@ const client = new MongoClient(uri, {
 const mongoConnection = async (req, res, next) => {
     // console.log(req.method,req.url)
     if (!db) {
-        console.log("connection creation needed");
+        // console.log("connection creation needed");
         await client.connect();
         // let connection = await client.db("admin").command({ ping: 1 });
         req.dbConnection = db = client;
         next()
     } else {
-        console.log("utlizein connecion")
+        // console.log("utlizein connecion")
         req.dbConnection = db;
         next()
     }
@@ -28,7 +28,7 @@ const mongoConnection = async (req, res, next) => {
 };
 module.exports.mongoConnection = mongoConnection;
 
-module.exports.closeConnection = () => {    
+module.exports.closeConnection = () => {
     console.log("closing opened db connections");
     db.close();
 }

@@ -3,23 +3,36 @@ const express = require('express')
 const engine = require('express-edge');
 const fs = require('fs');
 const path = require('path');
-// const fileUpload = require('express-fileupload');
+const fileUpload = require('express-fileupload');
+
+
+
 
 let app = module.exports = express(); // server instance 
 
 //custom modules 
 const { mongoConnection, closeConnection } = require('./database/mongoConnection')
-// console.log(db())
+const routes = require('./routes/index')
 
 //middlewares 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.resolve(__dirname, 'public')));
 app.use(engine);
-app.use(mongoConnection)
+app.use(mongoConnection);
+app.use(fileUpload({
+    limits: { fileSize: 50 * 1024 * 1024 },
+    createParentPath: true,
+    abortOnLimit: true,
+}
+));
+app.use("/", routes);
+
+
 
 // setting variables 
 app.set('views', `${__dirname}/views`);
+
 
 
 //----------routes creating-------------------------------
@@ -32,10 +45,6 @@ app.get("/", async (req, res) => {
     });
 })
 
-// About page---********************.-----------
-app.get("/about", (req, res) => {
-    res.render('about')
-})
 //post page route
 app.get("/post", (req, res) => {
     res.render('post')
@@ -46,11 +55,6 @@ app.get("/post/create", (req, res) => {
     res.render('createpost')
 })
 
-
-//contact page route
-app.get("/contact", (req, res) => {
-    res.render('contact')
-})
 //contact help form route
 app.post('/help', async (req, res) => {
     console.log("help request recevied");
@@ -59,27 +63,13 @@ app.post('/help', async (req, res) => {
     res.redirect('/')
 });
 
-
-app.post('/insertContent', async (req, res) => {
-    console.log(req.body, 8999);
-    let { username: userName, title, description, content, createdAt = new Date() } = req.body;
-    let insertedRecord = await req.dbConnection.db('node-blog').collection("posts").insertOne({ userName, title, description, content, createdAt });
-    console.log(insertedRecord)
-    if (insertedRecord.acknowledged && insertedRecord.insertedId) {
-        // return res.redirect('/')
-        return res.send("success")
-    }
-    res.send("unable to update")
-})
-
-
 // server start listening
 app.listen(3500, () => console.log("server started and listend at 3500"));
 
 
 process.on('SIGINT', () => {
     console.log(" closeing node port");
-    process.exit(0); 
+    process.exit(0);
 });
 process.on('beforeExit', (code) => {
     console.log('Process beforeExit event with code: ', code);
@@ -91,3 +81,5 @@ process.on('exit', (code) => {
 
 });
 process.on('uncaughtException', (err) => console.log(err));
+
+
