@@ -1,0 +1,6 @@
+//streams are use to transfer or receive large set of data
+Types of streams
+        readstream
+        wriitestream
+        duplex
+        Transform Streams
