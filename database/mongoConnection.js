@@ -20,7 +20,7 @@ const mongoConnection = async (req, res, next) => {
         req.dbConnection = db = client;
         next()
     } else {
-        console.log("utlizein connecion")
+        // console.log("utlizein connecion")
         req.dbConnection = db;
         next()
     }

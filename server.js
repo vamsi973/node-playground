@@ -10,7 +10,7 @@ let app = module.exports = express(); // server instance
 //custom modules 
 const mongoConnection = require('./database/mongoConnection');
 const { ObjectId } = require('mongodb');
-// console.log(db())
+
 
 //middlewares 
 app.use(express.json());
@@ -35,10 +35,6 @@ app.get("/", async (req, res) => {
     });
 })
 
-// About page---********************.-----------
-app.get("/about", (req, res) => {
-    res.render('about')
-})
 //post page route
 app.get("/post/:id", async (req, res) => {
     console.log(req.params);
@@ -51,19 +47,6 @@ app.get("/post/:id", async (req, res) => {
 app.get("/posts/create", (req, res) => {
     res.render('createpost')
 })
-
-
-//contact page route
-app.get("/contact", (req, res) => {
-    res.render('contact')
-})
-//contact help form route
-app.post('/help', async (req, res) => {
-    console.log("help request recevied");
-    console.log("help request recevied with", req.body);
-    let insertedRecord = await req.dbConnection.db('node-blog').collection("contact").insertOne(req.body);
-    res.redirect('/')
-});
 
 
 app.post('/insertContent', async (req, res) => {
@@ -89,3 +72,5 @@ app.post('/insertContent', async (req, res) => {
 
 // server start listening
 app.listen(3500, () => console.log("server started and listend at 3500"));
+
+app.use('/',require('./routes/route'))
