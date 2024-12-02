@@ -1,7 +1,18 @@
-const Route = require("express").Router();
-
-Route.use('/',require('./pageRoutes'))
-Route.use('/api',require('./blogRoutes'))
+const Router = require("express").Router();
+const pageRoutes = require('./pageRoutes');
 
 
-module.exports = Route;
+Router.use('/', require('./pageRoutes'))
+
+Router.use("/blog", require('./blogRoutes'));
+
+Router.all('/', (req, res) => {
+    res.redirect("/blog");
+});
+
+//if no end point i am rendering this 404 page
+Router.all('*',(req,res)=> res.render('404'))
+
+module.exports = Router;
+
+

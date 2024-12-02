@@ -29,45 +29,28 @@ app.set('views', `${__dirname}/views`);
 //----------routes creating-------------------------------
 
 //post page route
+// app.get("/post/:id", async (req, res) => {
+//     console.log(req.params);
+//     let post = await req.dbConnection.db('node-blog').collection('posts').findOne({ _id: new ObjectId(req.params.id) });
+//     console.log(post)
+//     res.render('post', { post })
+// })
+
 app.get("/post/:id", async (req, res) => {
     console.log(req.params);
     let post = await req.dbConnection.db('node-blog').collection('posts').findOne({ _id: new ObjectId(req.params.id) });
     console.log(post)
-    res.render('post', { post })
+    res.render('createpost', { post })
 })
 
 //creating new post 
 app.get("/posts/create", (req, res) => {
-    res.render('createpost')
-})
-
-
-app.post('/insertContent', async (req, res) => {
-    console.log(req.body, 8999);
-
-    let { image } = req?.files;
-    if (!image) {
-        let { username: userName, title, description, content, createdAt = new Date() } = req.body;
-        let insertedRecord = await req.dbConnection.db('node-blog').collection("posts").insertOne({ userName, title, description, content, createdAt });
-        console.log(insertedRecord)
-        if (insertedRecord.acknowledged && insertedRecord.insertedId) {
-            // return res.redirect('/')
-            return res.send("success")
-        }
-        return res.send("unable to update")
-    }
-
-
-
-
-    image.mv(path.resolve(__dirname, "public/posts", image.name), async (err, result) => {
-        // console.log(result);
-        // console.log(err);
-        let insertedRecord = await req.dbConnection.db('node-blog').collection("posts").insertOne({ userName, title, description, content, image: `/posts/${image.name}`, createdAt });
-        console.log(insertedRecord)
-        if (insertedRecord.acknowledged && insertedRecord.insertedId) {
-            // return res.redirect('/')
-            return res.send("success")
+    res.render('createpost', {
+        post: {
+            userName: '',
+            title: '',
+            description: '',
+            content: ''
         }
     })
 })

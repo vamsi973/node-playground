@@ -1,12 +1,3 @@
-
-// const pageController = {
-//     aboutPage: (req, res) => {
-//         res.render('about')
-//     }
-// }
-
-// module.exports = pageController;
-
 module.exports.aboutPage = (req, res) => {
     res.render('about')
 }
@@ -21,4 +12,8 @@ module.exports.home = async (req, res) => {
     res.render("index", {
         posts
     });
+}
+
+module.exports.post = async (req, res) => {
+    res.render('createpost')
 }
