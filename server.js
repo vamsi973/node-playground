@@ -21,7 +21,7 @@ app.use(mongoConnection);
 app.use(fileUpload({
     limits: { fileSize: 50 * 1024 * 1024 }, //file size is limited to 50 mb
 }));
-app.use('/',require('./routes/route'));
+app.use('/', require('./routes/route'));
 
 // setting variables 
 app.set('views', `${__dirname}/views`);
@@ -51,8 +51,15 @@ app.get("/posts/create", (req, res) => {
 
 
 app.post('/insertContent', async (req, res) => {
-    let { image } = req.files;
-
+    let { image = '' } = req?.files;
+    let { userName, title, description, content, createdAt = new Date() } = req.body;
+    if (!image) {
+        let insertedRecord = await req.dbConnection.db('node-blog').collection("posts").insertOne({ userName, title, description, content, image: `/posts/${image.name}`, createdAt });
+        if (insertedRecord.acknowledged && insertedRecord.insertedId) {
+            return res.redirect('/')
+        }
+        return
+    }
     image.mv(path.resolve(__dirname, "public/posts", image.name), async (err, result) => {
         // console.log(result);
         // console.log(err);
@@ -63,9 +70,6 @@ app.post('/insertContent', async (req, res) => {
         }
         res.send("unable to update")
     })
-
-
-    // res.send("unable to update")
 })
 
 
