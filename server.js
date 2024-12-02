@@ -27,13 +27,6 @@ app.set('views', `${__dirname}/views`);
 
 
 //----------routes creating-------------------------------
-// home page route--------------------------
-app.get("/", async (req, res) => {
-    let posts = await req.dbConnection.db('node-blog').collection('posts').find({}).toArray();
-    res.render("index", {
-        posts
-    });
-})
 
 //post page route
 app.get("/post/:id", async (req, res) => {
