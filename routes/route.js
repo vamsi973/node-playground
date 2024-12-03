@@ -11,7 +11,7 @@ Router.all('/', (req, res) => {
 });
 
 //if no end point i am rendering this 404 page
-Router.all('*',(req,res)=> res.render('404'))
+Router.all('*', (req, res) => res.render('404'))
 
 module.exports = Router;
 

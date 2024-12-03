@@ -11,6 +11,7 @@ let app = module.exports = express(); // server instance
 const { mongoConnection, closeConnection } = require('./database/mongoConnection')
 const { ObjectId } = require('mongodb');
 
+process.env.mongoDBNAME = 'myValue';
 
 //middlewares 
 app.use(express.json());

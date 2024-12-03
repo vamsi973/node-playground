@@ -3,6 +3,7 @@ const Route = require("express").Router();
 const page = require('../controllers/pageController');
 
 Route.get("/", async (req, res) => {
+    console.log(process.env.mongoDBNAME);
     let posts = await req.dbConnection.db('node-blog').collection("posts").find({}).toArray();
     res.render('index', { posts })
 })

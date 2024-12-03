@@ -31,12 +31,13 @@ const blogController = {
 
     createUser: async (req, res) => {
         try {
+            console.log()
             const secret = "secret";
-            const hash = crypto.createHmac('sha256', secret)
+            const iv = crypto.randomBytes(16);
+            const hash = crypto.createHmac('sha256', secret, iv)
                 .update(req.body.password)
                 .digest('hex');
-            console.log(hash)
-
+            decrypt(hash, secret,iv);
 
             let data = await req.dbConnection.db('node-blog').collection("users").insertOne({ userName: req.body.userName, password: hash, createdAt: new Date() });
             res.send(data)
@@ -45,6 +46,15 @@ const blogController = {
             res.send("failed")
         }
     }
+
+
 };
+
+function decrypt(hash, secret,iv) {
+    let decrypt = crypto.createDecipheriv('sha256', secret, iv);
+    let decryptHash = decrypt.update(hash, 'hex', utf8);
+    decrypted += decrypt.final('utf8');
+    console.log(decrypted)
+}
 
 module.exports = blogController;
